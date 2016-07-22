@@ -190,8 +190,12 @@ getStrings =
   
 ```
 
-#TODO: 
+#TODO: things i struggled with
 
+ - type constructors and dealing with importing/exporting them
+ - nested data
+ - good dict example with full working examples
+ - variable shadowing in let blocks
  - difference in argument order between elixir's |> and elm's
  - product type description and examples
  - union type examples
