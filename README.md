@@ -190,6 +190,79 @@ getStrings =
   
 ```
 
+# TODO: organize with concepts
+
+## elm json decode list
+
+Full example of how to decode a simple json list
+
+```elm
+import Html exposing (text,div,hr)
+import Json.Decode
+
+--|  this is our test json string.  it uses """ syntax for multi line strings
+jsonString = 
+   """ 
+   
+   [
+   { "key" : "bar" } 
+   ]
+   
+   """
+  
+--| This is for our json object type alias
+
+type alias LstItem = {key: String}
+
+
+--| This alias defines a simple list of json objects [{"key":"value"}]
+
+type alias Lst = List LstItem
+
+
+--| this defines a decoder for the Json objects in our list.
+
+decoder = Json.Decode.object1 LstItem (Json.Decode.at ["a"] Json.Decode.string)
+
+
+--| This defines a decoder function to process a list
+
+decodeLst : Json.Decode.Decoder Lst
+decodeLst = Json.Decode.list decoder
+
+
+--|  this function actually runs the decoder and produces a Result
+doDecodeLst : Json.Decode.Decoder a -> String -> Result String a
+doDecodeLst decodeLst raw_string = 
+  Json.Decode.decodeString decodeLst raw_string
+    
+
+--|  this one runs the decoder and processes the Result into an empty list or 
+--|  the decoded list and disregards any errors
+
+maybeDecodeLst : Json.Decode.Decoder (List LstItem) -> String -> List LstItem
+maybeDecodeLst decodeLst raw_string = 
+  case Json.Decode.decodeString decodeLst raw_string of
+    Err str -> []
+    Ok lst -> lst
+
+
+--| the main program, in this case a view.
+
+main =
+  div [] [
+    text "decoding json"
+    , text "the first version creates a result: "
+    , text <| toString (doDecodeLst decodeLst jsonString)
+    , hr [] []
+    , text "the second version creates a record: "
+    , text <| toString (maybeDecodeLst decodeLst jsonString)
+    , hr [] []
+    , text "the third version creates an error by using the wrong decoder: "
+    , text <| toString (doDecodeLst decoder jsonString)
+    ]
+```
+
 #TODO: things i struggled with
 
  - type constructors and dealing with importing/exporting them
