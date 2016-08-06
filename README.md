@@ -222,7 +222,7 @@ type alias Lst = List LstItem
 
 --| this defines a decoder for the Json objects in our list.
 
-decoder = Json.Decode.object1 LstItem (Json.Decode.at ["a"] Json.Decode.string)
+decoder = Json.Decode.object1 LstItem (Json.Decode.at ["key"] Json.Decode.string)
 
 
 --| This defines a decoder function to process a list
